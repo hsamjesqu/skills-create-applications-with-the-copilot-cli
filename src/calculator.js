@@ -4,11 +4,14 @@
  * calculator.js
  *
  * A simple Node.js CLI calculator supporting the four basic arithmetic
- * operations:
+ * operations plus modulo, exponentiation, and square root:
  *   - Addition       (+ or add)
  *   - Subtraction    (- or subtract)
  *   - Multiplication (* or multiply)
  *   - Division       (/ or divide)
+ *   - Modulo         (% or mod)
+ *   - Exponentiation (^ or pow)
+ *   - Square root    (sqrt) - unary operation, second operand is ignored
  *
  * Usage:
  *   node calculator.js <number1> <operator> <number2>
@@ -16,6 +19,9 @@
  * Examples:
  *   node calculator.js 5 + 3
  *   node calculator.js 10 divide 2
+ *   node calculator.js 5 % 2
+ *   node calculator.js 2 ^ 3
+ *   node calculator.js 16 sqrt 0
  */
 
 // Adds two numbers together.
@@ -41,6 +47,30 @@ function divide(a, b) {
   return a / b;
 }
 
+// Returns the remainder of dividing the first number by the second. Throws
+// an error on modulo by zero.
+function modulo(a, b) {
+  if (b === 0) {
+    throw new Error('Modulo by zero is not allowed.');
+  }
+  return a % b;
+}
+
+// Raises the first number to the power of the second number.
+function power(a, b) {
+  return Math.pow(a, b);
+}
+
+// Returns the square root of the first number. The second operand is
+// ignored since square root is a unary operation. Throws an error for
+// negative numbers since the result would be imaginary.
+function squareRoot(a) {
+  if (a < 0) {
+    throw new Error('Cannot calculate the square root of a negative number.');
+  }
+  return Math.sqrt(a);
+}
+
 // Maps supported operator symbols/words to their corresponding functions.
 const operations = {
   '+': add,
@@ -51,6 +81,14 @@ const operations = {
   multiply: multiply,
   '/': divide,
   divide: divide,
+  '%': modulo,
+  mod: modulo,
+  modulo: modulo,
+  '^': power,
+  pow: power,
+  power: power,
+  sqrt: squareRoot,
+  'square-root': squareRoot,
 };
 
 // Performs the calculation for the given operands and operator.
@@ -58,7 +96,7 @@ function calculate(num1, operator, num2) {
   const operation = operations[operator];
   if (!operation) {
     throw new Error(
-      `Unsupported operator "${operator}". Supported operators: + - * / (or add, subtract, multiply, divide).`
+      `Unsupported operator "${operator}". Supported operators: + - * / % ^ sqrt (or add, subtract, multiply, divide, modulo, power, sqrt).`
     );
   }
   return operation(num1, num2);
@@ -98,4 +136,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { add, subtract, multiply, divide, calculate };
+module.exports = { add, subtract, multiply, divide, modulo, power, squareRoot, calculate };
