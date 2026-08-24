@@ -1,15 +1,24 @@
 /**
  * calculator.test.js
  *
- * Unit tests for calculator.js covering the four basic arithmetic
- * operations: addition, subtraction, multiplication, and division.
+ * Unit tests for calculator.js covering arithmetic operations and
+ * related error handling.
  *
  * Run with: node --test src/calculator.test.js
  */
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { add, subtract, multiply, divide, calculate } = require('./calculator');
+const {
+  add,
+  subtract,
+  multiply,
+  divide,
+  modulo,
+  power,
+  squareRoot,
+  calculate,
+} = require('./calculator');
 
 test('add: adds two positive numbers', () => {
   assert.equal(add(2, 3), 5);
@@ -43,20 +52,50 @@ test('divide: throws an error when dividing by zero', () => {
   assert.throws(() => divide(10, 0), /Division by zero is not allowed\./);
 });
 
-test('calculate: supports symbol operators (+, -, *, /)', () => {
+test('modulo: returns the remainder after division', () => {
+  assert.equal(modulo(10, 3), 1);
+});
+
+test('modulo: throws an error when dividing by zero', () => {
+  assert.throws(() => modulo(10, 0), /Modulo by zero is not allowed\./);
+});
+
+test('power: raises a number to the given exponent', () => {
+  assert.equal(power(2, 3), 8);
+});
+
+test('squareRoot: returns the square root of a positive number', () => {
+  assert.equal(squareRoot(9), 3);
+});
+
+test('squareRoot: throws an error for negative numbers', () => {
+  assert.throws(() => squareRoot(-1), /Square root of a negative number is not allowed\./);
+});
+
+test('calculate: supports symbol operators (+, -, *, /, %, **, ^)', () => {
   assert.equal(calculate(2, '+', 3), 5);
   assert.equal(calculate(5, '-', 3), 2);
   assert.equal(calculate(4, '*', 6), 24);
   assert.equal(calculate(10, '/', 2), 5);
+  assert.equal(calculate(10, '%', 3), 1);
+  assert.equal(calculate(2, '**', 3), 8);
+  assert.equal(calculate(2, '^', 3), 8);
 });
 
-test('calculate: supports word operators (add, subtract, multiply, divide)', () => {
+test('calculate: supports word operators (add, subtract, multiply, divide, modulo, power)', () => {
   assert.equal(calculate(2, 'add', 3), 5);
   assert.equal(calculate(5, 'subtract', 3), 2);
   assert.equal(calculate(4, 'multiply', 6), 24);
   assert.equal(calculate(10, 'divide', 2), 5);
+  assert.equal(calculate(10, 'modulo', 3), 1);
+  assert.equal(calculate(2, 'power', 3), 8);
+});
+
+test('calculate: supports square root operators', () => {
+  assert.equal(calculate(9, 'sqrt'), 3);
+  assert.equal(calculate(9, '√'), 3);
 });
 
 test('calculate: throws on unsupported operator', () => {
-  assert.throws(() => calculate(1, '%', 2), /Unsupported operator/);
+  assert.throws(() => calculate(1, '//', 2), /Unsupported operator/);
 });
