@@ -8,9 +8,9 @@
  *   - Subtraction    (- or subtract)
  *   - Multiplication (* or multiply)
  *   - Division       (/ or divide)
- *   - Modulo         (% or modulo)
- *   - Exponentiation (**, ^, or power)
- *   - Square root    (sqrt or √)
+ *   - Modulo         (% or mod or modulo)
+ *   - Exponentiation (**, ^, pow, or power)
+ *   - Square root    (sqrt, square-root, or √)
  *
  * Usage:
  *   node calculator.js <number1> <operator> <number2>
@@ -22,6 +22,7 @@
  *   node calculator.js 10 % 3
  *   node calculator.js 2 ** 3
  *   node calculator.js sqrt 9
+ *   node calculator.js 16 sqrt 0
  */
 
 // Adds two numbers together.
@@ -47,7 +48,8 @@ function divide(a, b) {
   return a / b;
 }
 
-// Returns the remainder after dividing the first number by the second.
+// Returns the remainder of dividing the first number by the second. Throws an
+// error on modulo by zero.
 function modulo(a, b) {
   if (b === 0) {
     throw new Error('Modulo by zero is not allowed.');
@@ -60,10 +62,10 @@ function power(a, b) {
   return a ** b;
 }
 
-// Returns the square root of a number. Throws an error on negative inputs.
+// Returns the square root of a number. Throws an error for negative numbers.
 function squareRoot(value) {
   if (value < 0) {
-    throw new Error('Square root of a negative number is not allowed.');
+    throw new Error('Cannot calculate the square root of a negative number.');
   }
   return Math.sqrt(value);
 }
@@ -79,11 +81,14 @@ const operations = {
   '/': divide,
   divide: divide,
   '%': modulo,
+  mod: modulo,
   modulo: modulo,
   '**': power,
   '^': power,
+  pow: power,
   power: power,
   sqrt: squareRoot,
+  'square-root': squareRoot,
   '√': squareRoot,
 };
 
@@ -92,11 +97,11 @@ function calculate(num1, operator, num2) {
   const operation = operations[operator];
   if (!operation) {
     throw new Error(
-      `Unsupported operator "${operator}". Supported operators: + - * / % ** ^ sqrt √ (or add, subtract, multiply, divide, modulo, power).`
+      `Unsupported operator "${operator}". Supported operators: + - * / % ** ^ sqrt √ (or add, subtract, multiply, divide, mod, modulo, pow, power, square-root).`
     );
   }
 
-  if (operator === 'sqrt' || operator === '√') {
+  if (operator === 'sqrt' || operator === 'square-root' || operator === '√') {
     return operation(num1);
   }
 
@@ -107,7 +112,7 @@ function calculate(num1, operator, num2) {
 function main() {
   const args = process.argv.slice(2);
 
-  if (args.length === 2 && (args[0] === 'sqrt' || args[0] === '√')) {
+  if (args.length === 2 && (args[0] === 'sqrt' || args[0] === 'square-root' || args[0] === '√')) {
     const num = Number(args[1]);
 
     if (Number.isNaN(num)) {
