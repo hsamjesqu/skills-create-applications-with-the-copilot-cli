@@ -5,6 +5,7 @@
  * related error handling.
  *
  * Run with: node --test src/calculator.test.js
+ * Manuel Esquivel
  */
 
 const test = require('node:test');
